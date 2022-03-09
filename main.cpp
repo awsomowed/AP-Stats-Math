@@ -1,6 +1,7 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
+#include <string>
 
 /* DataSet Class
  * By: Brandon Moyer
@@ -76,6 +77,96 @@ public:
 	}
 };
 
+enum class ElementTypes {
+	Number = 0,
+	Variable = 1,
+	Parenthesis = 2,
+	Power = 3,
+	Add = 4,
+	Subtract = 5,
+	Multiply = 6,
+	Divide = 7,
+};
+
+class EquationElement {
+private:
+	std::vector<EquationElement> SubElements;
+	std::vector<EquationElement> AdditionalElements;
+	ElementTypes type;
+	double ElementNumber;
+	char ElementVariable;
+public:
+	std::vector<std::string> UnconvertedSubElements;
+	std::vector<std::string> UnconvertedAdditionalElements;
+
+	EquationElement(ElementTypes newType) {
+		type = newType;
+		ElementNumber = 0;
+		ElementVariable = ' ';
+	}
+
+	//Sub Element methods
+	void AddSubElement(EquationElement element) {
+		SubElements.push_back(element);
+	}
+
+	void InsertSubElement(EquationElement element, int index) {
+		SubElements.insert(SubElements.begin() + index, element);
+	}
+
+	EquationElement GetSubElement(int index) {
+		return SubElements[index];
+	}
+
+	void DeleteSubElement(int index) {
+		SubElements.erase(SubElements.begin() + index);
+	}
+
+	//Additional Element methods
+	void AddAdditionalElement(EquationElement element) {
+		AdditionalElements.push_back(element);
+	}
+
+	void InsertAdditionalElement(EquationElement element, int index) {
+		AdditionalElements.insert(AdditionalElements.begin() + index, element);
+	}
+
+	EquationElement GetAdditionalElement(int index) {
+		return AdditionalElements[index];
+	}
+
+	void DeleteAdditionalElement(int index) {
+		AdditionalElements.erase(AdditionalElements.begin() + index);
+	}
+
+	//Element type
+	void SetElementType(ElementTypes newType) {
+		type = newType;
+	}
+
+	ElementTypes GetElementType() {
+		return type;
+	}
+
+	//Element Number
+	void SetElementNumber(double newNumber) {
+		ElementNumber = newNumber;
+	}
+
+	double GetElementNumber() {
+		return ElementNumber;
+	}
+
+	//Element variable
+	void SetElementVariable(char newVar) {
+		ElementVariable = newVar;
+	}
+
+	char GetElementVariable() {
+		return ElementVariable;
+	}
+};
+
 //Menu Functions
 //[Example] CalculateMean() will prompt the user for the list to use
 bool MainMenu();
@@ -94,6 +185,9 @@ void CalculateSamplingDistribution();
 void CalculateConfidenceInterval();
 void Calculus();
 
+//Testing
+void InputEquation();
+
 //Mathematical Functions
 //[Example] Mean(DataSet data) will actually calculate the mean
 
@@ -104,8 +198,7 @@ static std::vector<DataSet> DataSets;
  * By: Brandon Moyer
  * Main Function
  */
-int main()
-{
+int main() {
 	//Repeats infinitely until main menu returns false
 	while (MainMenu())
 	{
@@ -117,8 +210,7 @@ int main()
  * By: Brandon Moyer
  * Displays the main menu
  */
-bool MainMenu()
-{
+bool MainMenu() {
 	std::cout << "Select a category: \n";
 	std::cout << "-1: Quit\n";
 	std::cout << "1: Calculus\n";
@@ -147,8 +239,7 @@ bool MainMenu()
  * By: Brandon Moyer
  * Displays the Ap stats menu
  */
-void APstats()
-{
+void APstats() {
 	int choice;
 	std::cout << "Select an option: \n";
 	std::cout << "-1: Back\n";
@@ -194,8 +285,7 @@ void APstats()
  * By: Brandon Moyer
  * Displays all data sets
  */
-void EditDataSets()
-{
+void EditDataSets() {
 	int choice;
 	std::cout << "Select a data set\n";
 	std::cout << "-1: Back\n";
@@ -227,8 +317,7 @@ void EditDataSets()
  * By: Brandon Moyer
  * Shows menu for editing a data set
  */
-void EditDataSet(int Set)
-{
+void EditDataSet(int Set) {
 	//By using the &, you store a refrence to the data set
 	//in the list instead of a copy of the data set
 	DataSet& currentSet = DataSets[Set];
@@ -274,8 +363,7 @@ void EditDataSet(int Set)
  * By: Brandon Moyer
  * Displays all data in a data set
  */
-void PrintDataSet(int Set)
-{
+void PrintDataSet(int Set) {
 	DataSet& currentSet = DataSets[Set];
 	std::cout << "List Elements: ";
 	for (int i = 0; i < currentSet.ListSize(); i++)
@@ -301,8 +389,7 @@ void PrintDataSet(int Set)
  * By: Brandon Moyer
  * Displays prompts for adding an element in a specified list
  */
-void AddDataElement(int Set)
-{
+void AddDataElement(int Set) {
 	DataSet& currentSet = DataSets[Set];
 
 	int index;
@@ -331,8 +418,7 @@ void AddDataElement(int Set)
  * By: Brandon Moyer
  * Displays prompts for deleting an element in a specified list
  */
-void DeleteDataElement(int Set)
-{
+void DeleteDataElement(int Set) {
 	DataSet& currentSet = DataSets[Set];
 
 	int index;
@@ -349,8 +435,7 @@ void DeleteDataElement(int Set)
  * By: Brandon Moyer
  * Promts the user to enter the mean for a specifed data set
  */
-void SetDataMean(int Set)
-{
+void SetDataMean(int Set) {
 	DataSet& currentSet = DataSets[Set];
 
 	float newMean;
@@ -366,8 +451,7 @@ void SetDataMean(int Set)
  * By: Brandon Moyer
  * Prompts the user to enter the standard deviation for a specified data set
  */
-void SetDataSD(int Set)
-{
+void SetDataSD(int Set) {
 	DataSet& currentSet = DataSets[Set];
 
 	float newSD;
@@ -383,17 +467,23 @@ void SetDataSD(int Set)
  * By:
  *
  */
-void CalculateMean()
-{
-	std::cout << "Not Implemented\n";
+void CalculateMean() {
+	//Demo code
+	DataSet* set;
+
+	if (true)
+	{
+		set = &DataSets[0];
+	}
+	set->GetElement(0);
+
 }
 
 /* CalculateStandardDeviation()
  * By:
  *
  */
-void CalculateStandardDeviation()
-{
+void CalculateStandardDeviation() {
 	std::cout << "Not Implemented\n";
 }
 
@@ -401,8 +491,7 @@ void CalculateStandardDeviation()
  * By:
  *
  */
-void CalculateProbability()
-{
+void CalculateProbability() {
 	std::cout << "Not Implemented\n";
 }
 
@@ -410,8 +499,7 @@ void CalculateProbability()
  * By:
  *
  */
-void CalculateSamplingDistribution()
-{
+void CalculateSamplingDistribution() {
 	std::cout << "Not Implemented\n";
 }
 
@@ -419,8 +507,7 @@ void CalculateSamplingDistribution()
  * By:
  *
  */
-void CalculateConfidenceInterval()
-{
+void CalculateConfidenceInterval() {
 	std::cout << "Not Implemented\n";
 }
 
@@ -428,7 +515,74 @@ void CalculateConfidenceInterval()
  * By:
  *
  */
-void Calculus()
-{
-	std::cout << "Not Implemented\n";
+void Calculus() {
+	std::cout << "Not Fully Implemented\n";
+
+	int choice;
+	std::cout << "Select an option\n";
+	std::cout << "-2: Derivitive Test\n";
+	std::cin >> choice;
+	if (choice == -2)
+	{
+		InputEquation();
+	}
+}
+
+/* InputEquation()
+ * By: Brandon Moyer
+ * Gets a function as a string and converts it to a single EquationElement object
+*/
+void InputEquation() {
+	std::string inputStr;
+	std::cout << "Enter an equation: ";
+	getline(std::cin, inputStr);
+
+	std::vector<std::string> elements;
+
+	for (int i = 0; i < inputStr.size(); i++)
+	{
+		//Searches in pemdas order
+		//Look for parenthesis, then splits up the 
+
+		//---------------
+		if (isdigit(inputStr[i]))
+		{
+			//Number
+		}
+		else if (inputStr[i] == '(')
+		{
+			//Parenthesis
+		}
+		else if (inputStr[i] == ')')
+		{
+			//End parenthesis
+		}
+		else if (inputStr[i] == '^')
+		{
+			//Power
+		}
+		else if (inputStr[i] == '*')
+		{
+			//Times
+		}
+		else if (inputStr[i] == '/')
+		{
+			//Divide
+		}
+		else if (inputStr[i] == '+')
+		{
+			//Add
+		}
+		else if (inputStr[i] == '-')
+		{
+			//Subtract
+		}
+		else if (inputStr[i] == '=')
+		{
+			//Equals
+		}
+		//Also need cos, sin, tan, arctan, arccos, arcsin, !(factorial) 
+
+	}
+
 }
