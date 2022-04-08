@@ -529,6 +529,7 @@ public:
 //Menu Functions
 //[Example] CalculateMean() will prompt the user for the list to use
 void MainMenu();
+bool ConfirmQuit();
 void EditGlobals();
 void EditDataSets();
 void EditDataSet(int Set);
@@ -589,7 +590,7 @@ void MainMenu() {
 		}
 		std::cout << "\n";
 		if (input == -1) {
-			Continue = false;
+			Continue = !ConfirmQuit();
 		}
 		else if (input == 0) {
 			EditGlobals();
@@ -601,6 +602,22 @@ void MainMenu() {
 			APstats();
 		}
 	}
+}
+
+bool ConfirmQuit() {
+	std::cout << "Are you sure you want to quit?\n";
+	std::cout << "Enter 1 to confirm: ";
+	int input = 0;
+	if (!(std::cin >> input)) {
+		input = 0;
+		std::cin.clear();
+		std::cin.ignore();
+	}
+	std::cout << "\n";
+	if (input == 1)
+		return true;
+	return false;
+
 }
 
 void EditGlobals() {
@@ -961,17 +978,34 @@ void APstats() {
 }
 
 /* CalculateMean()
- * By:
- *
+ * By: Martin Garcia
+ * Calculates the mean of a selected data set
  */
 void CalculateMean() {
-	//Demo code
+	//It Seems to work now, not sure why it wouldnt work before
 	DataSet* set;
 
-	if (true) {
-		set = &DataSets[0];
+	int choice;
+	double mean_sum = 0;
+	std::cout << "Select a data set\n";
+	std::cout << "-1: Back\n";
+	for (int i = 0; i < DataSets.size(); i++)
+	{
+		std::cout << (i + 1) << ": Data Set " << (i + 1) << "\n";
 	}
-	set->GetElement(0);
+	std::cin >> choice;
+	std::cout << "\n";
+
+	if (true)
+	{
+		set = &DataSets[choice - 1];
+	}
+
+	for (int i = 0; i < set->ListSize(); i++) {
+		mean_sum += set->GetElement(i);
+	}
+
+	std::cout << (mean_sum / ((double)set->ListSize())) << "\n";
 }
 
 /* CalculateStandardDeviation()
